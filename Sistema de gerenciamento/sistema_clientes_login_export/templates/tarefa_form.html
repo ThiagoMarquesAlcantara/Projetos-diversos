@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <h3 class="mb-3">{{ acao }} {{ 'Tarefa' if 'Tarefa' in acao else 'Cliente' }}</h3>
+    <form method="post" class="card p-3">
+      {% if 'Cliente' in acao %}
+        <div class="row g-2">
+          <div class="col-md-6"><input class="form-control" name="nome_empresa" placeholder="Nome da Empresa" required value="{{ cliente.nome_empresa if cliente else '' }}"></div>
+          <div class="col-md-6"><input class="form-control" name="cnpj" placeholder="CNPJ" value="{{ cliente.cnpj if cliente else '' }}"></div>
+          <div class="col-md-6"><input class="form-control" name="telefone" placeholder="Telefone" value="{{ cliente.telefone if cliente else '' }}"></div>
+          <div class="col-md-6"><input class="form-control" name="email" placeholder="Email" value="{{ cliente.email if cliente else '' }}"></div>
+          <div class="col-12"><input class="form-control" name="endereco" placeholder="Endereço" value="{{ cliente.endereco if cliente else '' }}"></div>
+          <div class="col-md-6"><input class="form-control" name="nome_responsavel" placeholder="Nome do Responsável" value="{{ cliente.nome_responsavel if cliente else '' }}"></div>
+          <div class="col-md-6"><input class="form-control" name="cpf" placeholder="CPF" value="{{ cliente.cpf if cliente else '' }}"></div>
+          <div class="col-md-4"><input class="form-control" name="numero_sedes" placeholder="Número de Sedes" value="{{ cliente.numero_sedes if cliente else '' }}"></div>
+          <div class="col-12"><textarea class="form-control" name="equipamentos" placeholder="Equipamentos utilizados">{{ cliente.equipamentos if cliente else '' }}</textarea></div>
+          <div class="col-12"><textarea class="form-control" name="observacoes" placeholder="Observações">{{ cliente.observacoes if cliente else '' }}</textarea></div>
+        </div>
+      {% else %}
+        <div class="mb-2"><input class="form-control" name="titulo" placeholder="Título" required value="{{ tarefa.titulo if tarefa else '' }}"></div>
+        <div class="mb-2"><textarea class="form-control" name="descricao" placeholder="Descrição">{{ tarefa.descricao if tarefa else '' }}</textarea></div>
+        <div class="mb-2">
+          <select class="form-select" name="status">
+            <option value="Pendente" {% if tarefa and tarefa.status=='Pendente' %}selected{% endif %}>Pendente</option>
+            <option value="Concluída" {% if tarefa and tarefa.status=='Concluída' %}selected{% endif %}>Concluída</option>
+          </select>
+        </div>
+      {% endif %}
+      <div class="mt-3 text-end">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Cancelar</a>
+        <button class="btn btn-primary">{{ acao }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+<div class="mb-3 d-flex justify-content-between align-items-start">
+  <div>
+    <h2 class="h4">{{ cliente.nome_empresa }}</h2>
+    <p class="small text-muted mb-0"><b>CNPJ:</b> {{ cliente.cnpj or '—' }}</p>
+    <p class="small text-muted mb-0"><b>Responsável:</b> {{ cliente.nome_responsavel or '—' }} {% if cliente.cpf %} (CPF: {{ cliente.cpf }}){% endif %}</p>
+  </div>
+  <div class="text-end">
+    <a href="{{ url_for('editar_cliente', cliente_id=cliente.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i> Editar</a>
+    <form action="{{ url_for('excluir_cliente', cliente_id=cliente.id) }}" method="post" class="d-inline" onsubmit="return confirm('Confirma exclusão do cliente?')">
+      <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Excluir</button>
+    </form>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="fw-semibold">Contato & Endereço</h6>
+        <p class="mb-1"><i class="bi bi-telephone"></i> {{ cliente.telefone or '—' }}</p>
+        <p class="mb-1"><i class="bi bi-envelope"></i> {{ cliente.email or '—' }}</p>
+        <p class="mb-0"><i class="bi bi-geo-alt"></i> {{ cliente.endereco or '—' }}</p>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="fw-semibold">Informações Adicionais</h6>
+        <p class="mb-1"><b>Número de sedes:</b> {{ cliente.numero_sedes or '—' }}</p>
+        <p class="mb-1"><b>Equipamentos:</b> {{ cliente.equipamentos or '—' }}</p>
+        <p class="mb-0"><b>Observações:</b> {{ cliente.observacoes or '—' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="mb-0">Tarefas</h6>
+      <a href="{{ url_for('nova_tarefa', cliente_id=cliente.id) }}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i> Nova Tarefa</a>
+    </div>
+
+    {% if tarefas %}
+    <div class="list-group">
+      {% for t in tarefas %}
+      <div class="list-group-item d-flex justify-content-between align-items-start">
+        <div>
+          <div class="fw-semibold">{{ t.titulo }}</div>
+          <div class="small text-muted">{{ t.descricao or '—' }}</div>
+          <div class="mt-1">
+            <span class="badge bg-{{ 'success' if t.status=='Concluída' else 'warning' }}">{{ t.status }}</span>
+          </div>
+        </div>
+        <div class="text-end">
+          <a href="{{ url_for('toggle_tarefa', tarefa_id=t.id) }}" class="btn btn-sm btn-outline-success mb-1" title="Marcar/Desmarcar">
+            <i class="bi bi-toggle-on"></i>
+          </a>
+          <a href="{{ url_for('editar_tarefa', tarefa_id=t.id) }}" class="btn btn-sm btn-outline-secondary mb-1"><i class="bi bi-pencil"></i></a>
+          <form action="{{ url_for('excluir_tarefa', tarefa_id=t.id) }}" method="post" class="d-inline" onsubmit="return confirm('Remover tarefa?')">
+            <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">Nenhuma tarefa cadastrada.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
